@@ -3,9 +3,9 @@ import { render } from "react-dom"
 import { AppContainer } from "react-hot-loader"
 import Root from "./ui/containers/Root"
 import "./ui/app.global.scss"
+import { configureStore, history } from "./store"
 
-const { configureStore, history } = require("./store/configureStore")
-const store = configureStore()
+const store = configureStore({})
 
 render(
   <AppContainer>
