@@ -1,15 +1,14 @@
 import * as React from "react"
-import {Route, Switch} from "react-router"
+import { Route, Switch } from "react-router"
 import { RouteComponentProps } from "react-router"
 
 import { TabMyContracts, TabEasyComposer, TabProEditor, TabMarketplace } from "./tabs"
-import TopBar from '../../../topBar/index';
-import { TopBarLinkProps } from '../../../topBar/topBarLink';
+import TopBar from "../../../topBar/index";
+import { TopBarLinkProps } from "../../../topBar/topBarLink";
 import { SectionInfo } from "../index"
 
-
-const mainStyles = require('../../style.scss')
-const styles = require('./style.scss')
+const mainStyles = require("../../style.scss")
+const styles = require("./style.scss")
 
 interface SmartContractsProps { }
 

@@ -1,7 +1,9 @@
 import * as React from "react"
-import {TopBarLink} from "../../topBar/topBarLink"
-import {PathNameProp} from "../../commonTypes"
-import {TopBarProps} from "../../topBar"
+import { RouteComponentProps } from "react-router"
+
+import { TopBarLink } from "../../topBar/topBarLink"
+import { PathNameProp } from "../../commonTypes"
+import { TopBarProps } from "../../topBar"
 
 export interface SectionProps {
   className?: string,
@@ -22,14 +24,14 @@ export interface SectionInfo {
   key: string
   caption: string
   icon?: string
-  component: React.ComponentClass
+  component: React.ComponentClass<RouteComponentProps<any>>
 }
 
 export interface TabProps {
   className?: string
 }
 
-export class TabComponent<Props> extends React.Component<TabProps & PathNameProp & Props> {}
+export class TabComponent<Props> extends React.Component<TabProps & PathNameProp & Props> { }
 
 export interface TabInfo {
   key: string
