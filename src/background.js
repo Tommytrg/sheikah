@@ -150,6 +150,7 @@ function createWindow() {
   })
 
   win.webContents.on('new-window', (e, url) => {
+    console.log('Open link: ' + url + '  in os browser')
     e.preventDefault()
 
     shell.openExternal(url)
@@ -160,6 +161,7 @@ function createWindow() {
   })
 
   win.on('close', function(event) {
+    console.log('Closing Sheikah window')
     if (process.platform === 'darwin') {
       if (!forceQuit) {
         event.preventDefault()
@@ -170,6 +172,7 @@ function createWindow() {
           win.hide()
         }
       } else {
+        console.log('Sending shutdown message to Sheikah')
         win.webContents.send('shutdown')
       }
     } else {
@@ -219,6 +222,7 @@ function createTray() {
       label: 'Quit Sheikah',
       type: 'normal',
       click: function() {
+        console.log('Sending shutdown message to Sheikah')
         win.webContents.send('shutdown')
       },
     },
@@ -287,13 +291,18 @@ function loadUrl(status) {
 }
 
 function main() {
+  console.log('Fetching releases from: ' + LATEST_RELEASES_URL)
+
   axios.get(LATEST_RELEASES_URL).then(async result => {
+
     const release = result.data.assets.find(
       asset =>
         asset.browser_download_url.includes(arch) &&
         asset.browser_download_url.includes(platform),
     )
+
     if (release) {
+      console.log('Release found')
       const releaseUrl = release.browser_download_url
 
       const releaseName = releaseUrl.split('/')[8]
@@ -302,9 +311,12 @@ function main() {
         0,
         releaseName.indexOf('-x86'),
       )
+      console.log('Latest release url: ' + releaseUrl)
       console.log('Latest release version: ' + latestReleaseVersion)
+      console.log('Latest release name: ' + releaseName)
 
       if (!fs.existsSync(SHEIKAH_PATH)) {
+        console.log("Sheikah's directory not found. Create a new one in: ", SHEIKAH_PATH)
         fs.mkdirSync(SHEIKAH_PATH)
       }
 
@@ -317,6 +329,11 @@ function main() {
       const existVersionFile = fs.existsSync(
         path.join(SHEIKAH_PATH, VERSION_FILE_NAME),
       )
+
+      if(existWitnetFile) console.log("Witnet's wallet file found")
+      if(existConfigFile) console.log("Witnet's config file found")
+      if(existVersionFile) console.log("Witnet's version file found")
+
       const isLastestVersion =
         existConfigFile &&
         existWitnetFile &&
@@ -325,8 +342,12 @@ function main() {
           fs.readFileSync(path.join(SHEIKAH_PATH, VERSION_FILE_NAME)).toString()
 
       if (!isLastestVersion) {
+        console.log('There is a newer version. Downloading latest wallet release...')
         await downloadWalletRelease(releaseUrl, latestReleaseVersion)
+      } else {
+        console.log('The wallet is up to date.')
       }
+
       runWallet()
     } else {
       status = STATUS.OS_NOT_SUPPORTED
@@ -342,6 +363,8 @@ async function runWallet() {
   console.log('Running wallet...')
 
   const walletConfigurationPath = path.join(SHEIKAH_PATH, 'witnet.toml')
+
+  console.log('... with witnet.toml from ' + walletConfigurationPath)
 
   const runWallet = spawn(path.join(SHEIKAH_PATH, 'witnet'), [
     '-c',
