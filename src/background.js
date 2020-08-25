@@ -49,6 +49,8 @@ const STATUS_PATH = {
 let win
 let tray
 let createdProtocol
+let walletProcess
+
 // open sheikah if is development environment
 let status = isDevelopment ? STATUS.READY : STATUS.WAIT
 let forceQuit = false
@@ -101,8 +103,12 @@ app.on('window-all-closed', () => {
 
 // Ipc event received from the client to close sheikah
 ipcMain.on('shutdown-finished', () => {
-  if (win) win.destroy()
-  app.quit()
+  console.log('inside shutdown-finished')
+  walletProcess.on('close', (code) => {
+    console.log(`wallet process exited with code ${code}`);
+    if (win) win.destroy()
+    app.quit()
+  })
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -366,20 +372,21 @@ async function runWallet() {
 
   console.log('... with witnet.toml from ' + walletConfigurationPath)
 
-  const runWallet = spawn(path.join(SHEIKAH_PATH, 'witnet'), [
+  walletProcess = spawn(path.join(SHEIKAH_PATH, 'witnet'), [
     '-c',
     walletConfigurationPath,
+    '--trace',
     'wallet',
     'server',
   ])
 
-  runWallet.stdout.on('data', function(data) {
+  walletProcess.stdout.on('data', function(data) {
     console.log('stdout: ' + data.toString())
     status = STATUS.READY
     loadUrl(status)
   })
 
-  runWallet.stderr.on('data', function(data) {
+  walletProcess.stderr.on('data', function(data) {
     console.log('stderr: ' + data.toString())
   })
 }
