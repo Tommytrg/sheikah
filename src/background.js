@@ -48,7 +48,7 @@ const STATUS_PATH = {
 let win
 let tray
 let walletProcess
-let protocolCreated
+let createdProtocol
 
 // open sheikah if is development environment
 let status = isDevelopment ? STATUS.READY : STATUS.WAIT
@@ -239,8 +239,6 @@ async function downloadWalletRelease(releaseUrl, version) {
   status = STATUS.WAIT
   loadUrl(STATUS.WAIT)
 
-  await sleep(5000)
-
   return new Promise((resolve, reject) => {
     axios
       .get(releaseUrl, { responseType: 'stream' })
@@ -267,6 +265,7 @@ async function downloadWalletRelease(releaseUrl, version) {
 
         // Remove the compressed file
         fs.unlinkSync(file)
+        await sleep(8000)
         resolve()
       })
       .catch(err => {
@@ -287,9 +286,9 @@ function loadUrl(status) {
         `${process.env.WEBPACK_DEV_SERVER_URL}#/${STATUS_PATH[status]}`,
       )
     } else {
-      if (!protocolCreated) {
+      if (!createdProtocol) {
         createProtocol('app')
-        protocolCreated = true
+        createdProtocol = true
       }
       // Load the index.html when not in development
       win.loadURL(`app://./index.html/#/${STATUS_PATH[status]}`)
@@ -299,16 +298,13 @@ function loadUrl(status) {
 
 function main() {
   console.info('Fetching releases from: ' + LATEST_RELEASES_URL)
-
   axios.get(LATEST_RELEASES_URL).then(async result => {
     const release = result.data.assets.find(
       asset =>
         asset.browser_download_url.includes(arch) &&
         asset.browser_download_url.includes(platform),
     )
-
     if (release) {
-      console.info('Release found')
       const releaseUrl = release.browser_download_url
 
       const releaseName = releaseUrl.split('/')[8]
@@ -317,10 +313,9 @@ function main() {
         0,
         releaseName.indexOf('-x86'),
       )
-      console.info('Latest release url: ' + releaseUrl)
       console.info('Latest release version: ' + latestReleaseVersion)
-      console.info('Latest release name: ' + releaseName)
-
+      win.webContents.send('downloading')
+      await sleep(8000)
       if (!fs.existsSync(SHEIKAH_PATH)) {
         console.info(
           "Sheikah's directory not found. Create a new one in: ",
@@ -349,18 +344,14 @@ function main() {
         existVersionFile &&
         latestReleaseVersion ===
           fs.readFileSync(path.join(SHEIKAH_PATH, VERSION_FILE_NAME)).toString()
-
       if (!isLastestVersion) {
-        console.info(
-          'There is a newer version. Downloading latest wallet release...',
-        )
         await downloadWalletRelease(releaseUrl, latestReleaseVersion)
       } else {
         console.info('The wallet is up to date')
       }
-
       runWallet()
     } else {
+      win.webContents.send('else')
       status = STATUS.OS_NOT_SUPPORTED
       loadUrl(status)
 
@@ -372,6 +363,8 @@ function main() {
 // Run Witnet wallet and load "ready" url
 async function runWallet() {
   console.info('Running wallet...')
+  win.webContents.send('running')
+  await sleep(8000)
 
   const walletConfigurationPath = path.join(SHEIKAH_PATH, 'witnet.toml')
 
@@ -394,6 +387,8 @@ async function runWallet() {
   walletProcess.stderr.on('data', function(data) {
     console.info('stderr: ' + data.toString())
   })
+  win.webContents.send('loaded')
+  await sleep(15000)
 }
 
 async function sleep(t) {
