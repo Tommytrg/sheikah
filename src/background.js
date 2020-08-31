@@ -19,6 +19,7 @@ import {
   Tray,
   ipcMain,
 } from 'electron'
+import progress from 'progress-stream'
 const osArch = os.arch()
 const arch = osArch === 'x64' ? 'x86_64' : osArch
 const platform = os.platform()
@@ -244,9 +245,30 @@ async function downloadWalletRelease(releaseUrl, version) {
       .get(releaseUrl, { responseType: 'stream' })
       .then(async response => {
         const file = `witnet-release-${arch}-${platform}.tar.gz`
+        const str = progress({
+          length: response.headers['content-length'],
+          time: 100 /* ms */
+        })
+
+        str.on('progress', function(progress) {
+          console.log(progress);
+
+          // pogress format
+          // {
+          //   percentage: 9.05,
+          //   transferred: 949624,
+          //   length: 10485760,
+          //   remaining: 9536136,
+          //   eta: 42,
+          //   runtime: 3,
+          //   delta: 295396,
+          //   speed: 949624
+          // }
+        })
+
         const pipeline = util.promisify(stream.pipeline)
         // Promise equivalent for response.data.pipe(writeStream)
-        await pipeline(response.data, fs.createWriteStream(file))
+        await pipeline(response.data, str, fs.createWriteStream(file))
         console.info('witnet release downloaded succesfully')
         console.info('Decompressing release...')
         // Decompress tar.gz file
