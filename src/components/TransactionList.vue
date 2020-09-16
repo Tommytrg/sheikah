@@ -124,6 +124,12 @@ export default {
     border-radius: 4px;
     box-shadow: $card-box-shadow;
     overflow: auto;
+    display: grid;
+    grid-template-columns: max-content max-content auto max-content;
+    grid-template-rows: repeat(10, 56px);
+    align-items: center;
+    grid-column-gap: 24px;
+    padding: 0 16px;
   }
 
   .no-transactions-container {

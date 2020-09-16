@@ -63,7 +63,7 @@ export default {
       synced: false,
     },
     radRequestResult: null,
-    transactions: [],
+    transactions: [{"id":"a220ed1b3ce73b2ac4c99c578cc05afe1ce6bd46a9c7acd24e5e39f782ef78f1","type":"POSITIVE","inputs":[{"value":125000000001,"address":"twit1wmm5dc3deqsnhyaa6wegghpz8wtdqed8ed7fms"}],"outputs":[{"value":1,"address":"twit1wrf9v96g28d2u76q50ang548latk0lh307c56v"},{"value":124999999999,"address":"twit1wmm5dc3deqsnhyaa6wegghpz8wtdqed8ed7fms"}],"fee":1,"date":"SEP 16, 2020 @ 17:35:30","timestamp":1600270530,"label":"","amount":1,"block":"5b3f679ff4484c96ded51b7ca2effc4ff5ca908ea8067515eebb42075ae757d3","witnesses":null,"rewards":null,"rounds":null,"currentStage":"IN PROGRESS","reveals":[],"finalResult":null,"transactionType":"value_transfer","timeAgo":"1 minute ago"},{"id":"7f9e5afc390678d69d552bbb0bcb6867543c12015b503f0530f2194241c76409","type":"POSITIVE","inputs":[{"value":124999999989,"address":"twit1wmm5dc3deqsnhyaa6wegghpz8wtdqed8ed7fms"}],"outputs":[{"value":100,"address":"twit1wrf9v96g28d2u76q50ang548latk0lh307c56v"},{"value":124999999888,"address":"twit1wmm5dc3deqsnhyaa6wegghpz8wtdqed8ed7fms"}],"fee":1,"date":"SEP 16, 2020 @ 17:35:30","timestamp":1600270530,"label":"","amount":100,"block":"5b3f679ff4484c96ded51b7ca2effc4ff5ca908ea8067515eebb42075ae757d3","witnesses":null,"rewards":null,"rounds":null,"currentStage":"IN PROGRESS","reveals":[],"finalResult":null,"transactionType":"value_transfer","timeAgo":"1 minute ago"},{"id":"ae8e77d0dbb3598ec7a46c200270f24967a3dcd068f156ba423fab134358eeef","type":"POSITIVE","inputs":[{"value":125000000000,"address":"twit1wmm5dc3deqsnhyaa6wegghpz8wtdqed8ed7fms"}],"outputs":[{"value":10,"address":"twit1wrf9v96g28d2u76q50ang548latk0lh307c56v"},{"value":124999999989,"address":"twit1wmm5dc3deqsnhyaa6wegghpz8wtdqed8ed7fms"}],"fee":1,"date":"SEP 16, 2020 @ 17:35:00","timestamp":1600270500,"label":"","amount":10,"block":"a9d8a03f882bd31f08eb3fbcc7bcb26fa1bd809a17ba1c6b52d73c201b362b2b","witnesses":null,"rewards":null,"rounds":null,"currentStage":"IN PROGRESS","reveals":[],"finalResult":null,"transactionType":"value_transfer","timeAgo":"1 minute ago"}],
     disclaimers: {},
     txLabels: {},
     walletInfos: null,
@@ -100,10 +100,11 @@ export default {
       state.vesting = vesting
     },
     setTransactions(state, { transactions }) {
-      state.transactions = transactions.map(transaction => ({
-        ...transaction,
-        timeAgo: calculateTimeAgo(transaction.timestamp),
-      }))
+      // state.transactions = transactions.map(transaction => ({
+      //   ...transaction,
+      //   timeAgo: calculateTimeAgo(transaction.timestamp),
+      // }))
+      // console.log(JSON.stringify(state.transactions))
     },
     setWalletIndex(state, { walletIndex }) {
       const walletInfos = state.walletInfos

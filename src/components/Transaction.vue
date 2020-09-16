@@ -7,32 +7,32 @@
       <div class="transaction" @click="showDetails = !showDetails">
         <img
           data-test="negative-positive"
-          class="icon"
+          class="icon col-1"
           :src="arrowIcon"
           alt=""
         />
         <Amount
           :currencyDark="true"
           data-test="amount"
-          class="amount"
+          class="amount col-2"
           :class="[origin.toLowerCase()]"
           :amount="amount"
         />
 
         <div
           v-if="transactionType === 'value_transfer'"
-          class="address-container"
+          class="address-container col-3"
         >
           <p data-test="origin" class="origin">{{ origin }}</p>
           <p data-test="address" class="address">{{ address }}</p>
         </div>
         <div
           v-else-if="transactionType === 'data_request'"
-          class="address-container"
+          class="address-container col-3"
         >
           <p data-test="transaction-type" class="address">Data request</p>
         </div>
-        <div v-else-if="transactionType === 'tally'" class="address-container">
+        <div v-else-if="transactionType === 'tally'" class="address-container col-3">
           <p data-test="transaction-type" class="address">Tally</p>
         </div>
         <div v-if="transactionType === 'mint'" class="address-container">
@@ -40,7 +40,7 @@
         </div>
 
         <div class="">
-          <p data-test="time-ago" class="date">{{ timeAgo }}</p>
+          <p data-test="time-ago" class="date col-4">{{ timeAgo }}</p>
         </div>
       </div>
       <div v-if="showDetails">
@@ -59,6 +59,7 @@
           :timelocked="!inputs && transactionType !== 'tally'"
         />
         <InputsOutputs
+          class="inputs-outputs"
           data-test="inputs-outputs"
           :fee="fee"
           :currency="currency"
@@ -210,10 +211,9 @@ export default {
 .transaction {
   align-items: center;
   cursor: pointer;
-  display: grid;
+  // display: grid;
   grid-column-gap: 24px;
-  grid-template-columns: max-content max-content auto max-content;
-  padding: 16px;
+  display: contents;
 
   .amount,
   .address {
@@ -225,6 +225,7 @@ export default {
     display: block;
     font-size: 16px;
     font-weight: bold;
+    justify-self: right;
 
     &.from {
       color: $green-5;
@@ -267,6 +268,33 @@ export default {
     color: $alt-grey-5;
     font-size: 13px;
   }
+}
+
+.border {
+  display: contents;
+}
+
+.col-1 {
+  grid-column: 1;
+}
+
+.col-2 {
+  grid-column: 2;
+}
+.col-3 {
+  grid-column: 3;
+}
+.col-4 {
+  grid-column: 4;
+}
+
+.transaction {
+  display: contents;
+}
+
+.inputs-outputs {
+  grid-column: 1 / 5;
+  grid-row: 2;
 }
 </style>
 
