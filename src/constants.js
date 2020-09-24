@@ -34,7 +34,7 @@ export const WALLET_EVENTS = {
   BLOCK_ORPHAN: 'BlocksOrphan',
 }
 export const DOWNLOADING_NEW_RELEASE_MSG =
-  'A new update is available, Downloading now...'
+  'There is an available update. Downloading...'
 export const RE_START_MSG =
   'Update downloaded. Please restart the application to install new Sheikah update'
 

@@ -1,8 +1,8 @@
 <template>
   <transition name="slide">
-    <div v-if="updateNotification" class="container">
+    <div class="notification">
       <p class="text">{{ updateNotificationMessage }}</p>
-      <div class="btn-container">
+      <div class="buttons">
         <el-button type="text" class="notify" @click="handleClick">{{
           btnMessage
         }}</el-button>
@@ -11,7 +11,7 @@
           type="text"
           class="notify"
           @click="clearUpdateNotification"
-          >Close</el-button
+          >Later</el-button
         >
       </div>
     </div>
@@ -40,6 +40,7 @@ export default {
   methods: {
     ...mapMutations({
       clearUpdateNotification: 'clearUpdateNotification',
+      toggleUpdateNotification: 'toggleUpdateNotification',
     }),
     restartApp() {
       console.log('click')

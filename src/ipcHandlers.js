@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron'
 import store from './store'
-import { RE_START_MSG, DOWNLOADING_NEW_RELEASE_MSG } from './constants'
+import { DOWNLOADING_NEW_RELEASE_MSG } from './constants'
 
 ipcRenderer.on('shutdown', async () => {
   await store.dispatch('shutdown')
@@ -18,8 +18,8 @@ ipcRenderer.on('loaded', async () => {
 ipcRenderer.on('downloaded', async () => {
   store.commit('setMessage', { message: 'wallet up to date' })
 })
-ipcRenderer.on('log', async () => {
-  console.log('re-start')
+ipcRenderer.on('log', async (event, msg) => {
+  console.log('[log]', msg)
 })
 ipcRenderer.on('progress', async (event, progress) => {
   store.commit('setProgress', { progress: progress.percentage })
@@ -30,12 +30,12 @@ ipcRenderer.on('app_version', (event, arg) => {
   console.log(arg.version)
 })
 ipcRenderer.on('update_available', () => {
+  console.log('update available')
   ipcRenderer.removeAllListeners('update_available')
   // create Notification for downloading new Sheikah release
   store.commit('toggleUpdateNotification', { msg: DOWNLOADING_NEW_RELEASE_MSG })
 })
 ipcRenderer.on('update_downloaded', () => {
   ipcRenderer.removeAllListeners('update_downloaded')
-  // create Notification for restarting Sheikah
-  store.commit('toggleUpdateNotification', { msg: RE_START_MSG })
+  ipcRenderer.send('restart_app')
 })

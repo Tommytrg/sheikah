@@ -123,7 +123,15 @@ ipcMain.on('app_version', event => {
 
 // Ipc event received from the client to restart Sheikah and install new version
 ipcMain.on('restart_app', () => {
-  autoUpdater.quitAndInstall()
+  win.webContents.send('log', 'restart app')
+  setImmediate(() => {
+    app.removeAllListeners('close')
+    forceQuit = true
+    if (win != null) {
+      win.close()
+    }
+    autoUpdater.quitAndInstall(false)
+  })
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -167,6 +175,8 @@ function createWindow() {
 
   loadUrl(status)
   autoUpdater.checkForUpdatesAndNotify()
+  autoUpdater.logger = require('electron-log')
+  autoUpdater.logger.transports.file.level = 'info'
 
   win.webContents.on('did-finish-load', () => {
     // Disables zooming with pinch
@@ -208,30 +218,25 @@ function createWindow() {
       }
     }
   })
-  // if (!isDevelopment) {
-  //   // Disable shortcuts defining a hidden menu and binding the shortcut we
-  //   // want to disable to an option
-  //   const menu = Menu.buildFromTemplate([
-  //     {
-  //       label: 'Menu',
-  //       submenu: [
-  //         { label: 'Reload', accelerator: 'CmdOrCtrl+R', click: () => {} },
-  //         { label: 'ZoomOut', accelerator: 'CmdOrCtrl+-', click: () => {} },
-  //         { label: 'ZoomIn', accelerator: 'CmdOrCtrl+Plus', click: () => {} },
-  //         { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
-  //         { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
-  //         { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
-  //       ],
-  //     },
-  //   ])
+  if (!isDevelopment) {
+    // Disable shortcuts defining a hidden menu and binding the shortcut we
+    // want to disable to an option
+    const menu = Menu.buildFromTemplate([
+      {
+        label: 'Menu',
+        submenu: [
+          { label: 'Reload', accelerator: 'CmdOrCtrl+R', click: () => {} },
+          { label: 'ZoomOut', accelerator: 'CmdOrCtrl+-', click: () => {} },
+          { label: 'ZoomIn', accelerator: 'CmdOrCtrl+Plus', click: () => {} },
+          { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
+          { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+          { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
+        ],
+      },
+    ])
 
-  //   Menu.setApplicationMenu(menu)
-  // }
-
-  // Check for updates and notify
-  win.once('ready-to-show', () => {
-    autoUpdater.checkForUpdatesAndNotify()
-  })
+    Menu.setApplicationMenu(menu)
+  }
 }
 
 function createTray() {
@@ -450,5 +455,11 @@ async function sleep(t) {
 }
 
 autoUpdater.on('update-available', () => {
+  win.webContents.send('log', 'update available')
   win.webContents.send('update_available')
+})
+
+autoUpdater.on('update-downloaded', () => {
+  win.webContents.send('update_downloaded')
+  win.webContents.send('log', 'update downloaded')
 })
