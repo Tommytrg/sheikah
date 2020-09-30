@@ -1,6 +1,6 @@
 {
   "name": "sheikah-witnet-wallet",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "private": true,
   "description": "A Witnet compatible desktop wallet interface and data requests development environment.",
   "author": "Witnet Foundation <info@witnet.foundation>",
@@ -106,6 +106,6 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/witnet/sheikah.git"
+    "url": "git+https://github.com/tommytrg/sheikah.git"
   }
 }
