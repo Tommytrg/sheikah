@@ -113,7 +113,7 @@ export function standardizeWitUnits(
   amount,
   outputCurrency,
   inputCurrency = WIT_UNIT.NANO,
-  truncate,
+  truncate = 2,
 ) {
   // from input currency to output currency
   const witUnitConversor = {
@@ -133,11 +133,17 @@ export function standardizeWitUnits(
       [`${WIT_UNIT.NANO}`]: 0,
     },
   }
+
   const num = Big(amount)
   const exponent = witUnitConversor[inputCurrency][outputCurrency]
-  return outputCurrency === WIT_UNIT.NANO
-    ? num.times(Big(10).pow(exponent), 0).toFixed(0)
-    : num.times(Big(10).pow(exponent), 0).toFixed(truncate)
+  const result = num.times(Big(10).pow(exponent))
+
+  console.log(result.toString())
+  console.log(result.cmp(1))
+  //  If the value of this Big number is greater than the value of n returns 1
+  return outputCurrency === WIT_UNIT.NANO || result.cmp(1)
+    ? result.toFixed(0)
+    : result.toFixed(truncate)
 }
 
 export function encodeDataRequest(radRequest) {
