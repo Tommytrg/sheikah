@@ -926,7 +926,7 @@ export default {
         eventType === WALLET_EVENTS.BLOCK_CONSOLIDATE ||
         eventType === WALLET_EVENTS.BLOCK_ORPHAN
       ) {
-        context.dispatch('setBalance', { balance: status.account.balance })
+        context.commit('setBalance', { balance: status.account.balance })
         context.dispatch('getTransactions', {
           limit: 50,
           page: context.state.currentTransactionsPage,
