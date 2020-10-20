@@ -74,6 +74,8 @@ export default {
       timestamp: 0,
       synced: false,
     },
+    description: '',
+    title: '',
     radRequestResult: null,
     transactions: [],
     currentTransactionsPage: 1,
@@ -95,6 +97,12 @@ export default {
     },
   },
   mutations: {
+    setWalletDescription(state, payload) {
+      // set title and description when received
+      Object.entries(payload).forEach(entry => {
+        state[entry[0]] = entry[1]
+      })
+    },
     setComputedVesting(state, computedVesting) {
       state.computedVesting = computedVesting
     },
@@ -782,12 +790,13 @@ export default {
 
     createWallet: async function(context, params) {
       const request = await context.state.api.createWallet({
-        name: 'first',
-        caption: '1',
+        title: context.state.title,
+        description: context.state.description,
         seed_data: params[params.sourceType],
         seed_source: params.sourceType,
         password: params.password,
       })
+
       if (request.result) {
         context.dispatch('unlockWallet', {
           walletId: request.result.wallet_id,

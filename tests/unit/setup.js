@@ -3,6 +3,7 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Router from 'vue-router'
 import '@/plugins/element'
 import '@/fontAwesome'
 
@@ -98,8 +99,12 @@ global.createComponentMocks = ({ store, router, style, mocks, stubs }) => {
   // If using `router: true`, we'll automatically stub out
   // components from Vue Router.
   if (router) {
-    returnOptions.stubs['router-link'] = true
-    returnOptions.stubs['router-view'] = true
+    localVue.use(Router)
+    returnOptions.router = new Router({ routes: [] })
+
+    if (typeof router === 'object') {
+      Object.entries(router).forEach(entry => { returnOptions.router[entry[0]] = entry[1] })
+    }
   }
 
   // If a `style` object is provided, mock some styles.

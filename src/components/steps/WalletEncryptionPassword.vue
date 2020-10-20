@@ -10,10 +10,10 @@
     :disabled-next-button="disabledNextButton"
   >
     <p class="paragraph">
-      <span class="bold"> PLEASE NOTE: </span> this password encrypts your
-      Witnet wallet only on this computer. This is not your backup and you
-      cannot restore your wallet with this password. Your 12 word seed phrase is
-      still your ultimate recovery method.
+      <span class="bold">PLEASE NOTE: </span> this password encrypts your Witnet
+      wallet only on this computer. This is not your backup and you cannot
+      restore your wallet with this password. Your 12 word seed phrase is still
+      your ultimate recovery method.
     </p>
     <div class="form-row password">
       <p>Create a password</p>
@@ -147,7 +147,7 @@ export default {
     },
     previousStep() {
       if (this.mnemonics) {
-        this.$router.push('/ftu/seed-validation')
+        this.$router.push('/ftu/wallet-description')
       } else if (this.seed) {
         this.$router.push('/ftu/import-wallet')
       }
