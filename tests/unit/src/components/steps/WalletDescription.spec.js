@@ -238,31 +238,31 @@ describe('WalletDescription.vue', () => {
 
       await wrapper.find('[data-test="previous-step"]').trigger('click')
 
-      expect(router.push.mock.calls[0][0]).toBe("/ftu/seed-validation")
+      expect(router.push.mock.calls[0][0]).toBe('/ftu/seed-validation')
     })
 
     it('should go to encrypt password route on click next step', async () => {
-        const router = {
-          push: jest.fn(),
-        }
+      const router = {
+        push: jest.fn(),
+      }
 
-        const wrapper = mount(WalletDescription, {
-          ...createComponentMocks({
-            store: {
-              wallet: {
-                state: {
-                  title: '',
-                  description: '',
-                },
+      const wrapper = mount(WalletDescription, {
+        ...createComponentMocks({
+          store: {
+            wallet: {
+              state: {
+                title: '',
+                description: '',
               },
             },
-            router: router,
-          }),
-        })
+          },
+          router: router,
+        }),
+      })
 
-        await wrapper.find('[data-test="next-step"]').trigger('click')
+      await wrapper.find('[data-test="next-step"]').trigger('click')
 
-        expect(router.push.mock.calls[0][0]).toBe("/ftu/encryption-pass")
+      expect(router.push.mock.calls[0][0]).toBe('/ftu/encryption-pass')
     })
-})
+  })
 })

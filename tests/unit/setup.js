@@ -103,7 +103,9 @@ global.createComponentMocks = ({ store, router, style, mocks, stubs }) => {
     returnOptions.router = new Router({ routes: [] })
 
     if (typeof router === 'object') {
-      Object.entries(router).forEach(entry => { returnOptions.router[entry[0]] = entry[1] })
+      Object.entries(router).forEach(entry => {
+        returnOptions.router[entry[0]] = entry[1]
+      })
     }
   }
 
