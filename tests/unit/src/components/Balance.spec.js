@@ -3,7 +3,7 @@ import BalanceData from '@/components/BalanceData'
 import BalanceButtons from '@/components/BalanceButtons'
 import Send from '@/components/Send'
 
-describe.skip('Balance.vue', () => {
+describe('Balance.vue', () => {
   it('render BalanceData component', () => {
     const wrapper = shallowMount(
       Balance,
@@ -23,7 +23,7 @@ describe.skip('Balance.vue', () => {
       }),
     )
 
-    expect(wrapper.contains(BalanceData)).toBe(true)
+    expect(wrapper.findComponent(BalanceData).exists()).toBe(true)
   })
 
   describe('should render send modal on click', () => {
@@ -46,10 +46,10 @@ describe.skip('Balance.vue', () => {
         }),
       )
 
-      expect(wrapper.contains(Send)).toBe(false)
+      expect(wrapper.findComponent(Send).exists()).toBe(false)
     })
 
-    it('should be visible when property isSendVisible is true', () => {
+    it.skip('should be visible when property isSendVisible is true', () => {
       const wrapper = shallowMount(
         Balance,
         createComponentMocks({
@@ -71,10 +71,10 @@ describe.skip('Balance.vue', () => {
         isSendVisible: true,
       })
 
-      expect(wrapper.contains(Send)).toBe(true)
+      expect(wrapper.findComponent(Send).exists()).toBe(true)
     })
 
-    it('BalanceButtons event send should show the modal', () => {
+    it.skip('BalanceButtons event send should show the modal', () => {
       // TODO: emit event from balanceData component
       const wrapper = mount(
         Balance,
@@ -97,9 +97,9 @@ describe.skip('Balance.vue', () => {
         }),
       )
 
-      wrapper.find(BalanceButtons).vm.$emit('send')
+      wrapper.findComponent(BalanceButtons).vm.$emit('send')
 
-      expect(wrapper.find(Send).isVisible()).toBe(true)
+      expect(wrapper.findComponent(Send).isVisible()).toBe(true)
     })
 
     it('BalanceButtons event receive should do something TBD', () => {
