@@ -97,7 +97,7 @@ export default {
     async nextStep() {
       await this.validateForm()
       if (!this.seedError) {
-        this.$router.push(`/ftu/encryption-pass`)
+        this.$router.push(`/ftu/wallet-description?import=true`)
       }
     },
     previousStep() {
