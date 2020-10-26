@@ -36,6 +36,7 @@
 
 <script>
 import NavigationCard from '@/components/card/NavigationCard'
+import { mapState } from 'vuex'
 
 export default {
   name: 'WalletSeedBackup',
@@ -43,6 +44,9 @@ export default {
     NavigationCard,
   },
   computed: {
+    ...mapState({
+      repeatedMnemonics: state => state.wallet.repeatedMnemonics,
+    }),
     isImporting() {
       return this.$route.query && this.$route.query.import
     },
@@ -50,7 +54,13 @@ export default {
       return `/ftu/encryption-pass${this.isImporting ? '?import=true' : ''}`
     },
     previousRoute() {
-      return this.isImporting ? '/ftu/import-wallet' : '/ftu/seed-validation'
+      if (this.repeatedMnemonics) {
+        return '/ftu/repeated-mnemonics'
+      } else if (this.isImporting) {
+        return '/ftu/import-wallet'
+      } else {
+        return '/ftu/seed-validation'
+      }
     },
     title: {
       set(val) {
