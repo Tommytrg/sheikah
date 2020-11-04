@@ -388,7 +388,6 @@ function main() {
         await sleep(2500)
         await downloadWalletRelease(releaseUrl, latestReleaseVersion)
       } else {
-        overwriteWalletConfigFile()
         win.webContents.send('downloaded')
         await sleep(3000)
       }
@@ -462,16 +461,30 @@ autoUpdater.on('update-downloaded', () => {
   autoUpdater.quitAndInstall(false)
 })
 
+// Overwrite wallet config file only when new version is downloaded
 function overwriteWalletConfigFile() {
-  fs.writeFileSync(
-    path.join(SHEIKAH_PATH, WITNET_CONFIG_FILE_NAME),
+  const defaultUrl = '127.0.0.1:21338'
 
-    fs
-      .readFileSync(path.join(SHEIKAH_PATH, WITNET_CONFIG_FILE_NAME))
-      .toString()
-      .replace(
-        'node_url = "127.0.0.1:21338"',
-        `node_url = "${URL_PUBLIC_WITNET_NODE}"\n`,
+  const nodeConfigFile = fs
+    .readFileSync(path.join(SHEIKAH_PATH, WITNET_CONFIG_FILE_NAME))
+    .toString()
+
+  // Get the first node_url value
+  const nodeUrlRegex = /node_url = "(.*)"/
+  const configIpMatch = nodeConfigFile.match(nodeUrlRegex)
+  // Assuming the config file only includes one "node_url"
+  const configUrl = Array.isArray(configIpMatch) && configIpMatch[1]
+
+  const url = configUrl === defaultUrl ?  URL_PUBLIC_WITNET_NODE : configUrl
+
+    // Overwrite URL if is different from the existing in the config file
+  if (url !== configUrl) {
+    fs.writeFileSync(
+      path.join(SHEIKAH_PATH, WITNET_CONFIG_FILE_NAME),
+      nodeConfigFile.replace(
+        `node_url = ${configUrl}`,
+        `node_url = "${url}"\n`,
       ),
-  )
+    )
+  }
 }
