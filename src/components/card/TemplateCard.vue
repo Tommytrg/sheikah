@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     ...mapState({
-      synced: state => state.wallet.walletStatus.synced,
+      synced: state => state.wallet.status.isWalletSynced,
     }),
     style() {
       return this.type

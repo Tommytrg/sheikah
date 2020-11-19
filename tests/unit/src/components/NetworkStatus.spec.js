@@ -14,11 +14,15 @@ describe('NetworkStatus', () => {
             store: {
               wallet: {
                 state: {
-                  walletStatus: {
+                  status: {
+                    currentState: {
+                      label: 'SYNCED',
+                      color: 'green',
+                    },
                     progress: 100,
                     timestamp: 1605195393912,
-                    synced: true,
-                    nodeSynced: true,
+                    isWalletSynced: true,
+                    isNodeSynced: true,
                   },
                   errors: {},
                 },
@@ -82,11 +86,15 @@ describe('NetworkStatus', () => {
             store: {
               wallet: {
                 state: {
-                  walletStatus: {
+                  status: {
+                    currentState: {
+                      label: 'SYNCING',
+                      color: 'yellow',
+                    },
                     progress: 100,
                     timestamp: 1605195393912,
-                    synced: false,
-                    nodeSynced: true,
+                    isWalletSynced: false,
+                    isNodeSynced: true,
                   },
                   errors: {},
                 },
@@ -151,14 +159,16 @@ describe('NetworkStatus', () => {
             store: {
               wallet: {
                 state: {
-                  walletStatus: {
+                  status: {
+                    currentState: {
+                      label: 'SYNC ERROR',
+                      color: 'red',
+                    },
                     progress: 100,
                     timestamp: 1605195393912,
-                    synced: false,
-                    nodeSynced: true,
-                  },
-                  errors: {
-                    nodeSync: true,
+                    isWalletSynced: false,
+                    isNodeSynced: true,
+                    syncError: true,
                   },
                 },
                 getters: {
@@ -241,11 +251,15 @@ describe('NetworkStatus', () => {
             store: {
               wallet: {
                 state: {
-                  walletStatus: {
+                  status: {
+                    currentState: {
+                      label: 'SYNCED',
+                      color: 'green',
+                    },
                     progress: 100,
                     timestamp: 1605195393912,
-                    synced: true,
-                    nodeSynced: true,
+                    isWalletSynced: true,
+                    isNodeSynced: true,
                   },
                   errors: {},
                 },
