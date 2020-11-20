@@ -1,9 +1,10 @@
 import { mount } from '@vue/test-utils'
-
 import '@/fontAwesome'
 
 import NetworkStatus from '@/components/NetworkStatus.vue'
 import Avatar from '@/components/Avatar.vue'
+
+import { NETWORK_STATUS } from '@/constants'
 
 describe('NetworkStatus', () => {
   describe('when is minimized', () => {
@@ -15,19 +16,20 @@ describe('NetworkStatus', () => {
               wallet: {
                 state: {
                   status: {
-                    currentState: {
-                      label: 'SYNCED',
-                      color: 'green',
-                    },
-                    progress: 100,
-                    timestamp: 1605195393912,
-                    isWalletSynced: true,
+                    currentState: NETWORK_STATUS.SYNCED,
+                    progress: 80,
+                    lastBlock: '123456',
+                    lastSync: 1605881425122,
+                    lastBlockTimestamp: 1605881425122,
+                    address: 'twit1syp754tutlpnqf4a492dssrv3lqtwqxjp4nq44',
                     isNodeSynced: true,
+                    balance: '123456789',
                   },
                   errors: {},
                 },
                 getters: {
                   network: () => 'mainnet',
+                  estimatedTimeOfSync: () => '00:32:22',
                   unlockedWallet: () => ({
                     id: '1',
                     name: 'wallet_1',
@@ -87,14 +89,14 @@ describe('NetworkStatus', () => {
               wallet: {
                 state: {
                   status: {
-                    currentState: {
-                      label: 'SYNCING',
-                      color: 'yellow',
-                    },
-                    progress: 100,
-                    timestamp: 1605195393912,
-                    isWalletSynced: false,
+                    currentState: NETWORK_STATUS.SYNCING,
+                    progress: 80,
+                    lastBlock: '123456',
+                    lastSync: 1605881425122,
+                    lastBlockTimestamp: 1605881425122,
+                    address: 'twit1syp754tutlpnqf4a492dssrv3lqtwqxjp4nq44',
                     isNodeSynced: true,
+                    balance: '123456789',
                   },
                   errors: {},
                 },
@@ -160,19 +162,19 @@ describe('NetworkStatus', () => {
               wallet: {
                 state: {
                   status: {
-                    currentState: {
-                      label: 'SYNC ERROR',
-                      color: 'red',
-                    },
-                    progress: 100,
-                    timestamp: 1605195393912,
-                    isWalletSynced: false,
+                    currentState: NETWORK_STATUS.SYNC_ERROR,
+                    progress: 80,
+                    lastBlock: '123456',
+                    lastSync: 1605881425122,
+                    lastBlockTimestamp: 1605881425122,
+                    address: 'twit1syp754tutlpnqf4a492dssrv3lqtwqxjp4nq44',
                     isNodeSynced: true,
-                    syncError: true,
+                    balance: '123456789',
                   },
                 },
                 getters: {
                   network: () => 'mainnet',
+                  estimatedTimeOfSync: () => '00:32:22',
                   unlockedWallet: () => ({
                     id: '1',
                     name: 'wallet_1',
@@ -252,19 +254,20 @@ describe('NetworkStatus', () => {
               wallet: {
                 state: {
                   status: {
-                    currentState: {
-                      label: 'SYNCED',
-                      color: 'green',
-                    },
+                    currentState: NETWORK_STATUS.SYNCED,
                     progress: 100,
-                    timestamp: 1605195393912,
-                    isWalletSynced: true,
+                    lastBlock: '123456',
+                    lastSync: 1605881425122,
+                    lastBlockTimestamp: 1605881425122,
+                    address: 'twit1syp754tutlpnqf4a492dssrv3lqtwqxjp4nq44',
                     isNodeSynced: true,
+                    balance: '123456789',
                   },
                   errors: {},
                 },
                 getters: {
                   network: () => 'mainnet',
+                  estimatedTimeOfSync: () => '00:32:22',
                   unlockedWallet: () => ({
                     id: '1',
                     name: 'wallet_1',
