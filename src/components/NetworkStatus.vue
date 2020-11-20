@@ -3,7 +3,7 @@
     <div class="header" @click="showAll = !showAll">
       <Avatar
         data-test="status-avatar"
-        :border-color="color"
+        :border-color="currentState.color"
         :src="unlockedWallet.image"
       />
       <div class="wallet-info">
@@ -12,8 +12,8 @@
         </p>
         <div class="status-container">
           <div class="progress">
-            <div data-test="status" :class="['status', color]">
-              {{ status.currentState.label }}
+            <div data-test="status" :class="['status', currentState.color]">
+              {{ currentState.label }}
             </div>
 
             <DotsLoading
@@ -97,6 +97,7 @@ import { mapGetters, mapState } from 'vuex'
 import Avatar from '@/components/Avatar'
 import DotsLoading from '@/components/DotsLoading.vue'
 import { calculateTimeAgo } from '@/utils'
+import { NETWORK_STATUS } from '@/constants'
 
 export default {
   name: 'NetworkStatus',
@@ -117,15 +118,49 @@ export default {
     ...mapGetters(['network', 'unlockedWallet', 'estimatedTimeOfSync']),
     ...mapState({
       status: state => state.wallet.status,
-      isResyncButtonVisible: state => state.wallet.status.isResyncButtonVisible,
-      isLoadingVisible: state => state.wallet.status.isLoadingVisible,
       syncingError: state => state.wallet.status.syncError,
     }),
-    color() {
-      return this.status.currentState.color
+    currentState() {
+      if (this.status.currentState === NETWORK_STATUS.NODE_DISCONNECTED) {
+        return {
+          label: NETWORK_STATUS.NODE_DISCONNECTED,
+          color: 'red',
+        }
+      } else if (this.status.currentState === NETWORK_STATUS.SYNC_ERROR) {
+        return {
+          label: NETWORK_STATUS.SYNC_ERROR,
+          color: 'red',
+        }
+      } else if (this.status.currentState === NETWORK_STATUS.SYNCED) {
+        return {
+          label: NETWORK_STATUS.SYNCED,
+          color: 'green',
+        }
+      } else if (this.status.currentState === NETWORK_STATUS.SYNCING) {
+        return {
+          label: `${NETWORK_STATUS.SYNCING} ${this.progress}%`,
+          color: 'yellow',
+        }
+      } else {
+        return {
+          label: NETWORK_STATUS.WAITING_FOR_NODE_TO_SYNC,
+          color: 'yellow',
+        }
+      }
+    },
+    isLoadingVisible() {
+      return (
+        !this.isWalletSynced && !this.syncingError && !this.isNodeDisconnected
+      )
+    },
+    isResyncButtonVisible() {
+      return (
+        (this.isWalletSynced && this.isNodeSynced) ||
+        (this.syncingError && this.isNodeSynced)
+      )
     },
     isSyncing() {
-      return this.status.currentState.label.includes('SYNCING')
+      return this.currentState.label.includes('SYNCING')
     },
     address() {
       return this.status.node && this.status.node.address
@@ -138,6 +173,12 @@ export default {
     },
     progress() {
       return (this.status && this.status.progress) || 0
+    },
+    isNodeDisconnected() {
+      return this.status && this.status.isNodeDisconnected
+    },
+    isNodeSynced() {
+      return this.status && this.status.isNodeSynced
     },
     isWalletSynced() {
       return this.status && this.status.isWalletSynced

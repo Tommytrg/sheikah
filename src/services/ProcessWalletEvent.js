@@ -1,10 +1,8 @@
-import { WALLET_EVENTS } from '@/constants'
+import { WALLET_EVENTS, NETWORK_STATUS } from '@/constants'
 
 export default class NetworkStatus {
   constructor() {
     this.currentState = null
-    this.isResyncButtonVisible = false
-    this.isLoadingVisible = false
     this.isNodeSynced = true
     this.isNodeDisconnected = false
     this.isWalletSynced = false
@@ -15,44 +13,15 @@ export default class NetworkStatus {
 
   currentStatus() {
     if (this.isNodeDisconnected) {
-      this.currentState = {
-        label: 'NODE DISCONNECTED',
-        color: 'red',
-      }
-      this.isLoadingVisible = false
-      this.isResyncButtonVisible = false
+      this.currentState = NETWORK_STATUS.NODE_DISCONNECTED
     } else if (this.syncError) {
-      this.currentState = {
-        label: 'SYNC ERROR',
-        color: 'red',
-      }
-      this.isLoadingVisible = false
-      if (this.isNodeSynced) {
-        this.isResyncButtonVisible = true
-      } else {
-        this.isResyncButtonVisible = false
-      }
+      this.currentState = NETWORK_STATUS.SYNC_ERROR
     } else if (this.isWalletSynced && this.isNodeSynced) {
-      this.currentState = {
-        label: 'SYNCED',
-        color: 'green',
-      }
-      this.isResyncButtonVisible = true
-      this.isLoadingVisible = false
+      this.currentState = NETWORK_STATUS.SYNCED
     } else if (this.isNodeSynced && !this.isWalletSynced) {
-      this.currentState = {
-        label: `SYNCING ${this.progress.toFixed(2)} %`,
-        color: 'yellow',
-      }
-      this.isLoadingVisible = true
-      this.isResyncButtonVisible = false
+      this.currentState = NETWORK_STATUS.SYNCING
     } else if (!this.isNodeSynced) {
-      this.currentState = {
-        label: 'WAITING FOR NODE TO SYNC',
-        color: 'yellow',
-      }
-      this.isLoadingVisible = true
-      this.isResyncButtonVisible = false
+      this.currentState = NETWORK_STATUS.WAITING_FOR_NODE_TO_SYNC
     }
   }
 

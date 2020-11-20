@@ -111,12 +111,12 @@ export default {
         {
           label: 'Deploy',
           action: () => {
-            if (this.synced) {
+            if (this.isWalletSynced) {
               this.displayDeployModal()
             } else {
               this.setError({
                 name: 'syncing',
-                error: 'The node is not yet synced',
+                error: 'The wallet is not yet synced',
                 message: 'Wait till the synchronization is finished',
               })
             }
@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     ...mapState({
-      synced: state => state.wallet.status.isWalletSynced,
+      isWalletSynced: state => state.wallet.status.isWalletSynced,
     }),
     style() {
       return this.type

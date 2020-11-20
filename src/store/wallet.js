@@ -5,7 +5,6 @@ import {
   createNotification,
   cropString,
   encodeDataRequest,
-  // isSyncEvent,
   standardizeWitUnits,
 } from '@/utils'
 import SyncingTimeEstimator from '@/services/SyncingTimeEstimator'
@@ -21,7 +20,6 @@ import {
   WIT_UNIT,
 } from '@/constants'
 import warning from '@/resources/svg/warning.png'
-// import { faLessThanEqual } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   state: {
