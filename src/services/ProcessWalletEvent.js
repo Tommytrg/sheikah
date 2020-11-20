@@ -9,23 +9,35 @@ export default class NetworkStatus {
     this.syncError = false
     this.progress = 0
     this.timestamp = 0
+    this.event = null
+    this.eventType = null
+    this.balance = null
   }
 
-  currentStatus() {
+  getCurrentStatus() {
     if (this.isNodeDisconnected) {
-      this.currentState = NETWORK_STATUS.NODE_DISCONNECTED
+      return NETWORK_STATUS.NODE_DISCONNECTED
     } else if (this.syncError) {
-      this.currentState = NETWORK_STATUS.SYNC_ERROR
+      return NETWORK_STATUS.SYNC_ERROR
     } else if (this.isWalletSynced && this.isNodeSynced) {
-      this.currentState = NETWORK_STATUS.SYNCED
+      return NETWORK_STATUS.SYNCED
     } else if (this.isNodeSynced && !this.isWalletSynced) {
-      this.currentState = NETWORK_STATUS.SYNCING
+      return NETWORK_STATUS.SYNCING
     } else if (!this.isNodeSynced) {
-      this.currentState = NETWORK_STATUS.WAITING_FOR_NODE_TO_SYNC
+      return NETWORK_STATUS.WAITING_FOR_NODE_TO_SYNC
     }
   }
 
-  processEvent(eventType, event) {
+  processEvent(rawEvent) {
+    const eventType =
+      typeof rawEvent.event === 'string'
+        ? rawEvent.event
+        : Object.keys(rawEvent.event)[0]
+    const event = rawEvent.event[eventType]
+    const status = rawEvent.status
+    this.eventType = eventType
+    this.event = event
+
     if (eventType === WALLET_EVENTS.BLOCK) {
       this.timestamp = Date.now()
     }
@@ -69,6 +81,28 @@ export default class NetworkStatus {
       this.isNodeSynced = false
       this.isWalletSynced = false
     }
-    this.currentStatus()
+
+    this.currentState = this.getCurrentStatus()
+    this.lastBlock = status
+      ? status.node.last_beacon.checkpoint
+      : this.lastBlock
+    this.lastSync = status ? status.wallet.last_sync.checkpoint : this.lastSync
+    this.lastBlockTimestamp = status
+      ? status.timestamp
+      : this.lastBlockTimestamp
+    this.address = status ? status.node.address : this.address
+
+    return {
+      currentState: this.currentState,
+      progress: this.progress,
+      lastBlock: this.lastBlock,
+      lastSync: this.lastSync,
+      lastBlockTimestamp: this.timestamp,
+      address: this.address,
+      isNodeSynced: this.isNodeSynced,
+      event: this.event,
+      eventType: this.eventType,
+      balance: status.account.balance,
+    }
   }
 }

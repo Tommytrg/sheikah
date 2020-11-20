@@ -18,6 +18,7 @@ import {
   GENERATE_ADDRESS_DELAY,
   WALLET_EVENTS,
   WIT_UNIT,
+  NETWORK_STATUS,
 } from '@/constants'
 import warning from '@/resources/svg/warning.png'
 
@@ -70,16 +71,14 @@ export default {
     seed: null,
     networkStatus: 'error',
     status: {
-      currentState: {
-        label: 'WAITING FOR NODE TO SYNC',
-        color: 'yellow',
-      },
+      currentState: NETWORK_STATUS.WAITING_FOR_NODE_TO_SYNC,
+      progress: null,
+      lastBlock: null,
+      lastSync: null,
+      lastBlockTimestamp: null,
+      address: null,
       isNodeSynced: false,
-      isNodeDisconnected: false,
-      isWalletSynced: false,
-      syncError: false,
-      progress: 0,
-      timestamp: 0,
+      balance: null,
     },
     syncingTimeEstimator: new SyncingTimeEstimator(),
     description: '',
@@ -113,13 +112,8 @@ export default {
     },
   },
   mutations: {
-    setStatus(state, { eventType, event, status }) {
-      if (eventType) {
-        state.eventProcessor.processEvent(eventType, event)
-        state.status = { ...state.eventProcessor, ...status }
-      } else {
-        state.status = status
-      }
+    setStatus(state, status) {
+      state.status = status
     },
     stopSyncEstimator(state) {
       state.syncingTimeEstimator.reset()
@@ -823,8 +817,29 @@ export default {
               })
             }
           } else {
+            // TODO: SET STATUS IF NO NOTIFICATION
+            const status = notifications.status
+            const lastBlock = status
+              ? status.node.last_beacon.checkpoint
+              : this.lastBlock
+            const lastSync = status
+              ? status.wallet.last_sync.checkpoint
+              : this.lastSync
+            const lastBlockTimestamp = status
+              ? status.timestamp
+              : this.lastBlockTimestamp
+            const address = status ? status.node.address : this.address
+            // debugger
+            // context.dispatch('processEvent', {
+            //   event: null
+            //   status: notifications.status,
+            // })
             context.commit('setStatus', {
-              status: { ...context.state.status, ...notifications.status },
+              ...context.state.status,
+              lastBlock,
+              lastSync,
+              lastBlockTimestamp,
+              address,
             })
           }
         },
@@ -866,7 +881,7 @@ export default {
     nodeMovement: async function(context, event) {
       await context.dispatch('getTransactions', { limit: 50, page: 1 })
       context.commit('setBalance', {
-        balance: context.state.status.account.balance,
+        balance: context.state.status.balance,
       })
       context.dispatch('getAddresses')
       const amount = standardizeWitUnits(event.amount, context.state.currency)
@@ -924,18 +939,15 @@ export default {
         page: context.state.currentTransactionsPage,
       })
       context.commit('setBalance', {
-        balance: context.state.status.account.balance,
+        balance: context.state.status.balance,
       })
       context.dispatch('getAddresses')
     },
     processEvent: async function(context, rawEvent) {
-      const eventType =
-        typeof rawEvent.event === 'string'
-          ? rawEvent.event
-          : Object.keys(rawEvent.event)[0]
-      const event = rawEvent.event[eventType]
-      const status = rawEvent.status
-      context.commit('setStatus', { eventType, event, status })
+      const eventProcess = context.state.eventProcessor.processEvent(rawEvent)
+      const { eventType, event } = eventProcess
+      context.commit('setStatus', eventProcess)
+
       if (
         eventType === WALLET_EVENTS.BLOCK ||
         eventType === WALLET_EVENTS.BLOCK_CONSOLIDATE ||
