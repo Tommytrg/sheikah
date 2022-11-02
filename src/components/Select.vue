@@ -109,7 +109,7 @@
 <script>
 import { standardizeOperatorName } from '@/utils'
 import OperatorType from '@/components/OperatorType.vue'
-import CustomIcon from '@/components/CustomIcon'
+import CustomIcon from '@/components/CustomIcon.vue'
 
 let resetKeysSoFarTimer
 export default {
@@ -445,7 +445,7 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Example
 #### Operator select
 
@@ -468,4 +468,4 @@ export default {
     :options="[{primaryText: 'option 1'},{primaryText: 'option 2'}]"
   />
 ```
-</docs>
+</docs> -->

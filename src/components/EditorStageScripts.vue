@@ -48,8 +48,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import LayoutTwoColumns from '@/components/LayoutTwoColumns'
-import Fieldset from '@/components/Fieldset'
+import LayoutTwoColumns from '@/components/LayoutTwoColumns.vue'
+import Fieldset from '@/components/Fieldset.vue'
 import EditorScript from '@/components/card/EditorScript.vue'
 
 export default {
@@ -101,9 +101,9 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Example
 ```jsx
   <EditorStageScripts />
 ```
-</docs>
+</docs> -->

@@ -76,10 +76,10 @@
 
 <script>
 import { mapState } from 'vuex'
-import Amount from '@/components/Amount'
-import DotsLoading from '@/components/DotsLoading'
-import Address from '@/components/Address'
-import Tag from '@/components/Tag'
+import Amount from '@/components/Amount.vue'
+import DotsLoading from '@/components/DotsLoading.vue'
+import Address from '@/components/Address.vue'
+import Tag from '@/components/Tag.vue'
 import { formatDateVerbose, copyToClipboard } from '@/utils'
 /**
  * Show the information of a given address
@@ -293,7 +293,7 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Example
 
 #### Default
@@ -317,4 +317,4 @@ export default {
     :used="false"
   />
 ```
-</docs>
+</docs> -->

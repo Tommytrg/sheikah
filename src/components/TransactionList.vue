@@ -63,8 +63,8 @@
 
 <script>
 import { mapActions } from 'vuex'
-import Transaction from './Transaction'
-import Fieldset from './Fieldset'
+import Transaction from './Transaction.vue'
+import Fieldset from './Fieldset.vue'
 import { TRANSACTIONS_LIMIT } from '@/constants'
 
 export default {
@@ -152,7 +152,7 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Example
 #### Empty
 ```jsx
@@ -694,4 +694,4 @@ export default {
 
   <TransactionList :transactions="transactions" unit="nanoWits" />
 ```
-</docs>
+</docs> -->

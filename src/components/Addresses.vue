@@ -29,9 +29,9 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import Fieldset from '@/components/Fieldset'
-import AddressList from '@/components/AddressList'
-import AddressInformation from '@/components/AddressInformation'
+import Fieldset from '@/components/Fieldset.vue'
+import AddressList from '@/components/AddressList.vue'
+import AddressInformation from '@/components/AddressInformation.vue'
 
 /**
  * List all the addresses and show the information of the selected one
@@ -118,7 +118,7 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Example
 #### Default
 
@@ -148,4 +148,4 @@ export default {
 ```jsx
   <Addresses :addresses="[]" />
 ```
-</docs>
+</docs> -->

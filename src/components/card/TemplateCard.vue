@@ -66,7 +66,7 @@
 import { mapActions, mapMutations, mapState } from 'vuex'
 import { SET_CURRENT_TEMPLATE } from '@/store/mutation-types'
 import { cropString } from '@/utils'
-import CustomIcon from '@/components/CustomIcon'
+import CustomIcon from '@/components/CustomIcon.vue'
 import { NETWORK_STATUS } from '@/constants'
 
 export default {
@@ -260,7 +260,7 @@ export default {
   }
 }
 </style>
-
+<!-- 
 <docs>
 ### Examples
 
@@ -273,4 +273,4 @@ export default {
     id="0"
   />
 ```
-</docs>
+</docs> -->
