@@ -149,7 +149,7 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Example
 
 ```jsx
@@ -157,4 +157,4 @@ export default {
     initialStage="retrieve"
   />
 ```
-</docs>
+</docs> -->

@@ -75,9 +75,9 @@ export default {
 }
 </script>
 
-<docs>
+<!-- <docs>
 ### Example
 ```jsx
   <EditorStageTally />
 ```
-</docs>
+</docs> -->

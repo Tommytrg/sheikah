@@ -72,7 +72,7 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Example
 
 ```jsx
@@ -81,4 +81,4 @@ export default {
   />
 ```
 
-</docs>
+</docs> -->

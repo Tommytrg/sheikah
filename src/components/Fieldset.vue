@@ -121,7 +121,7 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Examples
 
 #### Default
@@ -145,4 +145,4 @@ export default {
   </Fieldset>
 ```
 
-</docs>
+</docs> -->

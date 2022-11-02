@@ -47,7 +47,7 @@ export default {
   min-height: 100vh;
 }
 </style>
-
+<!-- 
 <docs>
 ### Example
 
@@ -58,4 +58,4 @@ export default {
     </div>
   </LayoutSidebar>
 ```
-</docs>
+</docs> -->

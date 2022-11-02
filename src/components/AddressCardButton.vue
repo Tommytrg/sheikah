@@ -52,10 +52,10 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Example
 
 ```jsx
   <AddressCardButton />
 ```
-</docs>
+</docs> -->

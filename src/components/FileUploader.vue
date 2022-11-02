@@ -353,7 +353,7 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 #### Upload component:
 
 #### Basic usage
@@ -380,4 +380,4 @@ export default {
 </FileUploader>
 ```
 
-</docs>
+</docs> -->

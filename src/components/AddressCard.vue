@@ -74,7 +74,7 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Examples
 
 #### Not Used
@@ -91,4 +91,4 @@ export default {
 ```jsx
   <AddressCard :used="false" :selected="true" />
 ```
-</docs>
+</docs> -->

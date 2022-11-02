@@ -185,7 +185,7 @@ export default {
   }
 }
 </style>
-
+<!-- 
 <docs>
 ### Example
 
@@ -200,4 +200,4 @@ export default {
   />
 ```
 
-</docs>
+</docs> -->

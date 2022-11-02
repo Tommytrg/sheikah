@@ -45,10 +45,10 @@ export default {
 }
 </script>
 
-<docs>
+<!-- <docs>
 ### Example
 ```jsx
 
   <EditorStageSettings />
 ```
-</docs>
+</docs> -->

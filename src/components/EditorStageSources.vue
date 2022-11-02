@@ -130,10 +130,10 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Example
 
 ```jsx
   <EditorStageSources />
 ```
-</docs>
+</docs> -->

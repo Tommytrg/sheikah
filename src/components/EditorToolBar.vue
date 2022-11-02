@@ -312,10 +312,10 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Example
 
 ```jsx
   <EditorToolBar />
 
-</docs>
+</docs> -->
