@@ -1,3 +1,4 @@
+console.log(4)
 const path = require('path')
 
 module.exports = {
