@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <span class="tag" :class="[props.color]">
     {{ props.text }}
   </span>
@@ -53,7 +53,7 @@ export default {
 }
 </style>
 
-<docs>
+<!-- <docs>
 ### Examples
 
 #### Green
@@ -66,4 +66,4 @@ export default {
   <Tag color="red" text="ERROR" />
 ```
 
-</docs>
+</docs> -->
