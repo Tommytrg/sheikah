@@ -248,6 +248,7 @@ export class MarketplaceApi {
   }
 
   getTemplates() {
+    console.log('getTemplates')
     return this._get(`${this.baseUrl}/templates`)
   }
 
@@ -263,6 +264,7 @@ export class MarketplaceApi {
 
 export class LocalStorageWrapper {
   _get(key) {
+    console.log('localstoragewraper')
     return JSON.parse(localStorage.getItem(key))
   }
 
