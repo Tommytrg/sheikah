@@ -24,8 +24,6 @@ jobs:
           node-version: 16.14.0
 
       - uses: actions/setup-python@v4
-        with:
-          python-version: '2.7' 
 
       - name: Build Electron app
         shell: bash
