@@ -767,6 +767,7 @@ export default {
           ),
           min_consensus_percentage: parameters.minConsensusPercentage,
         },
+        preview: true,
       }
       const req = await context.state.api.createDataRequest(data)
       if (req.result) {
@@ -834,6 +835,7 @@ export default {
           [feeType.key]: standardizeWitUnits(fee, WIT_UNIT.NANO),
         },
         label,
+        preview: true,
       })
       if (request.result) {
         return request.result
