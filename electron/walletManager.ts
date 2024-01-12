@@ -22,10 +22,50 @@ import {
   OS_ARCH,
   RELEASE_BASE_URL,
 } from './constants'
-import { AppManager } from './appManager'
-import getVersionFromName from './utils/getVersionFromName'
-import overwriteWitnetNodeConfiguration from './utils/overwriteWitnetNodeConfiguration'
-import sleep from './utils/sleep'
+
+import { Actions } from './main/index'
+
+// Parse version name to get the version number witnet-1.2.1 => 1.2.1
+export function getVersionFromName(name: string): string | null {
+  return semver.valid(semver.coerce(name))
+}
+
+// Replace witnet nodes urls in witnet configuration file
+export function overwriteWitnetNodeConfiguration({
+  sheikahPath,
+  witnetConfigFileName,
+  publicNodeUrls,
+}: {
+  sheikahPath: string
+  witnetConfigFileName: string
+  publicNodeUrls: Array<string>
+}) {
+  const replacement = `node_url = ${JSON.stringify(publicNodeUrls)}\n`
+    .replace("'", '')
+    .trim()
+  const nodeUrlUntilCharacter = (character: string) =>
+    new RegExp('node_url =([^;]*)' + character)
+  try {
+    fs.writeFileSync(
+      path.join(sheikahPath, witnetConfigFileName),
+      fs
+        .readFileSync(path.join(sheikahPath, witnetConfigFileName))
+        .toString()
+        .replace(nodeUrlUntilCharacter('"'), replacement)
+        .replace(nodeUrlUntilCharacter(']'), replacement),
+    )
+  } catch (error) {
+    console.log('Error overwriting configuration file', error)
+  }
+}
+
+export default async function sleep(t: number) {
+  return new Promise<void>(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, t)
+  })
+}
 
 interface GithubReleaseAsset {
   // eslint-disable-next-line camelcase
@@ -37,7 +77,6 @@ interface GithubTagInfo {
 }
 
 export class WalletManager {
-  public app: AppManager
   public isUpdating: boolean = false
   public walletProcess: cp.ChildProcessWithoutNullStreams | null = null
   private existDirectory: boolean
@@ -50,14 +89,12 @@ export class WalletManager {
     linux: this.decompressLinuxWallet,
   }[PLATFORM]
 
-  constructor(appManager: AppManager) {
-    this.app = appManager
-
+  constructor() {
     this.existDirectory = fs.existsSync(SHEIKAH_PATH)
   }
 
   //  Start running the wallet release and download it when is necessary
-  public async run() {
+  public async run(actions: Actions) {
     if (this.existDirectory) {
       // Check if latest version is compatible or needs to be downloaded
       try {
@@ -109,17 +146,17 @@ export class WalletManager {
       }
 
       if (this.needToDownloadWallet) {
-        await this.downloadWallet(downloadUrl)
+        await this.downloadWallet(actions, downloadUrl)
       } else {
-        this.app.sendDownloadedMessage()
+        actions.sendDownloadedMessage()
         await sleep(3000)
       }
 
       if (!this.isUpdating) {
-        this.runWallet()
+        this.runWallet(actions)
       }
     } else {
-      this.app.setStatus(Status.OsNotSupported)
+      actions.setStatus(Status.OsNotSupported)
       console.info('Your OS is not supported yet')
     }
   }
@@ -130,19 +167,19 @@ export class WalletManager {
   }
 
   // Download a wallet release from the url specified
-  public async downloadWallet(releaseUrl: string) {
+  public async downloadWallet(actions: Actions, releaseUrl: string) {
     console.info(
       `Fetching release from: ${RELEASE_BASE_URL}${this.witnetRustVersion}`,
     )
-    this.app.sendDownloadingMessage()
+    actions.sendDownloadingMessage()
     await sleep(2500)
-    this.app.setStatus(Status.Wait)
+    actions.setStatus(Status.Wait)
     // FIXME: Remove promise and use async / await
     return new Promise<void>(resolve => {
       axios
         .get(releaseUrl, { responseType: 'stream' })
         .then(async response => {
-          this.handleDownloadWalletResponse(response)
+          this.handleDownloadWalletResponse(actions, response)
           resolve()
         })
         .catch(err => {
@@ -223,7 +260,10 @@ export class WalletManager {
     )
   }
 
-  private async handleDownloadWalletResponse(response: AxiosResponse) {
+  private async handleDownloadWalletResponse(
+    actions: Actions,
+    response: AxiosResponse,
+  ) {
     const walletCompressPath = path.join(
       SHEIKAH_PATH,
       WALLET_COMPRESS_FILE_NAME,
@@ -233,7 +273,7 @@ export class WalletManager {
       time: 100 /* ms */,
     })
     str.on('progress', (progress: number) => {
-      this.app.sendProgressMessage(progress)
+      actions.sendProgressMessage(progress)
     })
     const pipeline = util.promisify(stream.pipeline)
     // Promise equivalent for response.data.pipe(writeStream)
@@ -255,10 +295,10 @@ export class WalletManager {
   }
 
   // Run Witnet wallet and load "ready" url
-  public async runWallet() {
+  public async runWallet(actions: Actions) {
     await sleep(3000)
     console.info('Running wallet...')
-    this.app.sendRunningMessage()
+    // this.app.sendRunningMessage()
     await sleep(3000)
 
     const walletConfigurationPath = path.join(SHEIKAH_PATH, 'witnet.toml')
@@ -277,9 +317,9 @@ export class WalletManager {
     )
     this.walletProcess?.stdout.on('data', async data => {
       console.info('stdout: ' + data.toString())
-      this.app.sendLoadedMessage()
+      // this.app.sendLoadedMessage()
       await sleep(3000)
-      this.app.setStatus(Status.Ready)
+      actions.setStatus(Status.Ready)
     })
 
     this.walletProcess?.stderr.on('data', function (data) {
@@ -287,7 +327,7 @@ export class WalletManager {
     })
 
     if (this.walletProcess.pid) {
-      this.app.setWalletPid(this.walletProcess.pid)
+      actions.setWalletPid(this.walletProcess.pid)
     }
   }
 }
