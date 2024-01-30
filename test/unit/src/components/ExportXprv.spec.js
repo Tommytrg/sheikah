@@ -1,7 +1,10 @@
 import ExportXprv from '@/components/ExportXprv.vue'
+import Card from '@/components/card/Card.vue'
+import PasswordValidation from '@/components/PasswordValidation.vue'
 import { mount } from '@vue/test-utils'
 import { describe, expect, test, vi } from 'vitest'
-import { createMockStore } from '../../utils'
+import { createMocks } from '../../utils'
+import { ElButton, ElInput, ElSwitch } from 'element-plus'
 
 describe('ExportXprv', () => {
   const exportMasterKeyMock = vi.fn()
@@ -19,20 +22,19 @@ describe('ExportXprv', () => {
           },
         },
       },
-      actions: {
-        exportMasterKey: exportMasterKeyMock,
-      },
-      mutations: {
-        validatePassword: validatePasswordMock,
-        clearError: clearErrorMock,
-      },
+    },
+    stubs: {
+      'el-button': ElButton,
+      'el-input': ElInput,
+      'el-switch': ElSwitch,
+      focus: true,
+      Card: Card,
+      PasswordValidation: PasswordValidation,
     },
   })
 
   const wrapper = mount(ExportXprv, {
-    global: {
-      plugins: [i18n, mockStore],
-    },
+    ...mockStore,
   })
 
   test('shows an error when the password is not validated', async () => {
