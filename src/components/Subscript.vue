@@ -44,11 +44,12 @@
 import { mapMutations, mapState } from 'vuex'
 import { PUSH_OPERATOR, DELETE_OPERATOR } from '@/store/mutation-types'
 import CustomIcon from '@/components/CustomIcon.vue'
+import RadonOperator from '@/components/RadonOperator.vue'
 
 export default {
   name: 'Subscript',
   components: {
-    RadonOperator: () => import('@/components/RadonOperator.vue'),
+    RadonOperator,
     CustomIcon,
   },
   props: {
