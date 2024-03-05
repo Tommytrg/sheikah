@@ -46,7 +46,10 @@ import {
   onLoadedStatus,
   onDownloadProgress,
   onOSNotSupported,
+  onMessage,
+  onShutdown,
 } from '@/ipc/ipcEvents'
+import { sendShutdownFinished } from '@/ipc/ipcMessages'
 
 const store = useStore()
 const { idle } = useIdle(5 * 60 * 1000) // 5 min
@@ -77,6 +80,13 @@ onMounted(() => {
     event.stopImmediatePropagation()
   }
   //TODO: move to a service
+  onShutdown(async () => {
+    await store.dispatch('shutdown')
+    sendShutdownFinished()
+  })
+  onMessage((message: string) => {
+    console.log('Message from Auto Updater', message)
+  })
   onDownloadProgress((progress: any) => {
     store.commit('setProgress', { progress: progress.percentage })
   })
