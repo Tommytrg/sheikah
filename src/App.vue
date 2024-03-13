@@ -14,6 +14,7 @@
       <DescriptionModal />
       <RenameConfirmation />
       <DeleteWalletConfirmation />
+      <ExportXprvModal v-if="isExportXprvQrVisible" />
     </div>
   </el-config-provider>
 </template>
@@ -27,6 +28,7 @@ import LogoutModal from '@/components/LogoutModal.vue'
 import DescriptionModal from '@/components/DescriptionModal.vue'
 import RenameConfirmation from '@/components/RenameConfirmation.vue'
 import DeleteWalletConfirmation from '@/components/DeleteWalletConfirmation.vue'
+import ExportXprvModal from '@/components/ExportXprvModal.vue'
 import { ref, watch, onMounted, onBeforeUnmount, type Ref, toRefs } from 'vue'
 import { LANGUAGES } from '@/constants'
 import { useRoute } from 'vue-router'
@@ -41,8 +43,9 @@ const route = useRoute()
 // const { locale } = useI18n()
 
 const store = useStore()
-console.log('aaaaas start!!!')
-console.log(store)
+const { idle } = useIdle(5 * 50 * 1000) // 5 min
+const { sessionWillExpireSoon } = toRefs(store.state.wallet)
+const { isExportXprvQrVisible } = toRefs(store.state.uiInteractions)
 
 const { sessionWillExpireSoon, isIdle } = toRefs(store.state.wallet)
 

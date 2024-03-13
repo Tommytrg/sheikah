@@ -66,6 +66,7 @@
     "postcss": "^8.4.33",
     "prettier": "3.1.1",
     "progress-stream": "^2.0.0",
+    "qrcode-vue3": "^1.6.8",
     "rpc-websockets": "^7.9.0",
     "sass": "^1.69.7",
     "semver": "^7.5.4",
